@@ -19,7 +19,6 @@ public class TestCategorie {
 
     private Client client;
     private WebTarget target;
-    private WebTarget targetSand;
     
     @Before
     public void initClient(){
@@ -79,7 +78,6 @@ public class TestCategorie {
     
     @Test
     public void testCategorieSandwich(){
-        this.targetSand = this.client.target(Serveur.serveurUrl() + "sandwichs");
         
         // Iniatialisation
         JsonObjectBuilder categorie = Json.createObjectBuilder();

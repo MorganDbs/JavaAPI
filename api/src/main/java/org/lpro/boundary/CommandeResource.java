@@ -246,17 +246,16 @@ public class CommandeResource {
         
         Commande commande = new Commande(nom_client, prenom_client, mail_client, dateCommande_stamp);
         Commande newCommande = this.cm.save(commande);
-        
-        return Optional.ofNullable(cm.findById(commande.getId()))
-                .map(c -> Response.ok(commande2Json(c)).build())
-                .orElseThrow(() -> new CommandeNotFound("Ressource non disponible " + uriInfo.getPath()));
+        URI uri = uriInfo.getAbsolutePathBuilder().path("/"+newCommande.getId() + "?token="+newCommande.getToken()).build();
+        return Response.created(uri).entity(commande2Json(newCommande)).build();
+       
     }
     
     @PUT
     @Path("{id}/livraison")
     @ApiOperation(value = "Change les informations de livraison d'une commande", notes = "Change les informations de livraison d'une commande à partir du JSON fourni")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 417, message = "EXPECTATION_FAILED"),
         @ApiResponse(code = 500, message = "Internal server error")})
@@ -355,7 +354,7 @@ public class CommandeResource {
 
             c = this.cm.updateLivraison(c, dateCommande_stamp);
 
-            return Response.ok().entity(commande2Json(c)).status(Response.Status.CREATED).build();
+            return Response.ok().entity(commande2Json(c)).build();
             
         }else{
             return Response.status(Response.Status.FORBIDDEN).entity(
@@ -471,7 +470,6 @@ public class CommandeResource {
                 }else{
                     
                     double montant = c.getQuantity().stream().mapToDouble(cq -> (cq.getQuantity() * this.tm.findById(cq.getTaille_id()).getPrix())).sum();
-                    System.out.println(montant);
                     this.cfm.updateMontant(cf, montant);
                 }
             }
@@ -486,7 +484,7 @@ public class CommandeResource {
             
             c = this.cm.payerCommande(c);
 
-            return Response.ok().entity(buildJsonPay(c)).status(Response.Status.CREATED).build();
+            return Response.ok().entity(buildJsonPay(c)).status(Response.Status.OK).build();
             
         }else{
             return Response.status(Response.Status.FORBIDDEN).entity(
@@ -544,7 +542,7 @@ public class CommandeResource {
                 ).build();
             }
             c = this.cm.updateEtat(c, jsonEtat.getString("etat"));
-            return Response.ok().entity(buildJsonPay(c)).status(Response.Status.CREATED).build();
+            return Response.ok().entity(buildJsonPay(c)).status(Response.Status.OK).build();
         }else{
             return Response.status(Response.Status.FORBIDDEN).entity(
                     Json.createObjectBuilder()
@@ -844,7 +842,7 @@ public class CommandeResource {
                                 .path("/")
                                 .path(c.getId())
                                 .build();
-                            return Response.created(uri).build();
+                            return Response.ok(uri).build();
                         }else{
                             return Response.status(Response.Status.FORBIDDEN).entity(
                                 Json.createObjectBuilder()
@@ -858,7 +856,7 @@ public class CommandeResource {
                                 .path("/")
                                 .path(c.getId())
                                 .build();
-                        return Response.created(uri).build();
+                        return Response.ok(uri).status(Response.Status.OK).build();
                     }
                 }
             }
@@ -870,7 +868,7 @@ public class CommandeResource {
                                 .path("/")
                                 .path(c.getId())
                                 .build();
-                    return Response.created(uri).build();
+                    return Response.ok(uri).status(Response.Status.OK).build();
                 }else{
                     return Response.status(Response.Status.FORBIDDEN).entity(
                         Json.createObjectBuilder()

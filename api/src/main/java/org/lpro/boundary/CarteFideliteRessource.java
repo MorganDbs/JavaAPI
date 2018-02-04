@@ -54,7 +54,7 @@ public class CarteFideliteRessource {
             return Response.status(Response.Status.FORBIDDEN).build();
         }else{
             CarteFidelite cf = this.cfm.createCarte(carteFidelite);
-            return Response.ok().entity(buildJsonCarte(cf)).status(Response.Status.CREATED).build();
+            return Response.ok().entity(buildJsonCarte(cf)).status(Response.Status.CREATED).header(AUTHORIZATION, cf.getCarte()).build();
         }
     }
     
