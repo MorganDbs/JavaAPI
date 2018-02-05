@@ -5,7 +5,12 @@
  - Dubois Morgan
  
  https://github.com/MorganDbs/JavaAPI
- 
+
+# Swagger
+```
+url-of-your-server/apiee
+```
+
 # Template request
 
 ``` bash
