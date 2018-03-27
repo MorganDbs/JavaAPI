@@ -1,7 +1,6 @@
 # JavaAPI
 
 # Contributors
- - Matmat Myriam
  - Dubois Morgan
  
  https://github.com/MorganDbs/JavaAPI
